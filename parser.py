@@ -5,10 +5,14 @@ from bs4 import BeautifulSoup
 
 @dataclass
 class OlxOffer:
+    id: str
     name: str
     loc: str
     date: str
     img: str
+
+    def __str__(self):
+        return f"{self.id},{self.name},{self.date},{self.loc},{self.img}"
 
     @classmethod
     def _retrieve_offer_name(cls, div):
@@ -36,10 +40,11 @@ class OlxOffer:
 
     @classmethod
     def parse(cls, offer_div):
+        id = offer_div["id"]
         name = cls._retrieve_offer_name(offer_div)
         loc, date = cls._retrieve_offer_location_and_date(offer_div)
         img = cls._retrieve_offer_image(offer_div)
-        return OlxOffer(name, loc, date, img)
+        return OlxOffer(id, name, loc, date, img)
 
 
 class OlxPageParser:
@@ -65,6 +70,4 @@ class OlxPageParser:
     def retrieve_offers(self):
         grid = self._get_offers_grid()
         offers = self._parse_grid(grid)
-        print(len(offers))
-        print(offers)
         return offers

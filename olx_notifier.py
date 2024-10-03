@@ -1,6 +1,7 @@
 from twilio.rest import Client
 from parser import OlxPageParser
 from scraper import fetch_offers_page
+from storage import Storage
 
 # in this part you have to replace account_sid
 # auth_token, twilio_number, recipient_number with your actual credential
@@ -23,8 +24,19 @@ recipient_number = "+48602460473"
 
 # print(f"Message sent with SID: {message.sid}")
 
+def retrieve_new_offers(offers, old_ids):
+    new_offers = []
+    for offer in offers:
+        if offer.id not in old_ids:
+            new_offers.append(offer)
+    return new_offers
 
 if __name__ == "__main__":
     page_html = fetch_offers_page()
-    parser = OlxPageParser(page_html)
-    offers = parser.retrieve_offers()
+    offers = OlxPageParser(page_html).retrieve_offers()
+    storage = Storage()
+    ids = storage.read_ids()
+
+    offers = retrieve_new_offers(offers, ids)
+    print(len(offers))
+    storage.save_offers(offers)
