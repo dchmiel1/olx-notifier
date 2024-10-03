@@ -1,31 +1,10 @@
 import schedule
-from twilio.rest import Client
 
 from parser import OlxPageParser
 from scraper import fetch_offers_page
+from sms import SMSClient
 from storage import Storage
 from time import sleep
-
-# in this part you have to replace account_sid
-# auth_token, twilio_number, recipient_number with your actual credential
-
-account_sid = "ACa5f316db44cd623625218d50111b9e85"
-auth_token = "d654ebff5a91021b065f68d255df1c7e"
-twilio_number = "+13343103088"
-recipient_number = "+48602460473"
-
-# # Create Twilio client
-# client = Client(account_sid, auth_token)
-
-# # Send SMS
-# # in body part you have to write your message
-# message = client.messages.create(
-#     body='This is a new message',
-#     from_=twilio_number,
-#     to=recipient_number
-# )
-
-# print(f"Message sent with SID: {message.sid}")
 
 
 def retrieve_new_offers(offers, old_ids):
@@ -40,16 +19,18 @@ def check_for_updates():
     page_html = fetch_offers_page()
     offers = OlxPageParser(page_html).retrieve_offers()
     storage = Storage()
+    sms_client = SMSClient()
     ids = storage.read_ids()
 
     offers = retrieve_new_offers(offers, ids)
     print("New offers: ", len(offers))
+    sms_client.notify_about_new_offers(offers)
     storage.save_offers(offers)
 
 
 if __name__ == "__main__":
     check_for_updates()
-    schedule.every(1).minutes.do(check_for_updates)
+    schedule.every(10).minutes.do(check_for_updates)
 
     while True:
         schedule.run_pending()

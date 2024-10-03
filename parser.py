@@ -32,10 +32,10 @@ class OlxOffer:
     def _retrieve_offer_image(cls, div):
         img_el = div.find(class_="css-8wsg1m")
         if img_el is not None:
-            return img_el["src"]
+            return img_el["src"].split(";", 1)[0]
         img_el = div.find(class_="css-gwhqbt")
         if img_el is not None:
-            return img_el["src"]
+            return img_el["src"].split(";", 1)[0]
         return None
 
     @classmethod
