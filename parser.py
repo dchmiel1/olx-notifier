@@ -52,7 +52,7 @@ class OlxPageParser:
         self.page_html = page_html
 
     def _get_offers_grid(self):
-        soup = BeautifulSoup(self.page_html)
+        soup = BeautifulSoup(self.page_html, features="html.parser")
         grid = soup.find(class_="css-j0t2x2")
         return grid
 
