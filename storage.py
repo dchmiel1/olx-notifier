@@ -1,4 +1,5 @@
 import csv
+import os
 
 
 class Storage:
@@ -17,7 +18,9 @@ class Storage:
                 print(offer)
 
     def read_ids(self):
-        with open(self.filename, "a+") as f:
+        if not os.path.isfile(self.filename):
+            return []
+        with open(self.filename, "r") as f:
             csvreader = csv.reader(f, delimiter=",", quotechar="|")
             ids = []
             for offer in csvreader:
