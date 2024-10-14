@@ -1,5 +1,6 @@
 from time import sleep
 from selenium import webdriver
+from selenium.webdriver import ChromeOptions
 
 OLX_URL = "https://www.olx.pl/dom-ogrod/meble/grojec/q-oddam-za-darmo/?search%5Bdist%5D=75&search%5Border%5D=created_at%3Adesc"
 
@@ -15,7 +16,12 @@ def scroll_page_slowly(driver):
 
 
 def fetch_offers_page():
-    driver = webdriver.Chrome()
+    options = ChromeOptions()
+    options.add_argument("--no-sandbox")
+    options.add_argument("--headless")
+    options.add_argument("window-size=1024,768")
+    options.add_argument("--disable-dev-shm-usage")
+    driver = webdriver.Chrome(options=options)
     driver.get(OLX_URL)
     scroll_page_slowly(driver)
     return driver.page_source
