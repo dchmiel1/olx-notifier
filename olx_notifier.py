@@ -7,6 +7,12 @@ from storage import Storage
 from time import sleep
 
 
+def init_offers():
+    page_html = fetch_offers_page()
+    offers = OlxPageParser(page_html).retrieve_offers()
+    Storage().save_offers(offers)
+
+
 def retrieve_new_offers(offers, old_ids):
     new_offers = []
     for offer in offers:
@@ -29,7 +35,7 @@ def check_for_updates():
 
 
 if __name__ == "__main__":
-    check_for_updates()
+    init_offers()
     schedule.every(10).minutes.do(check_for_updates)
 
     while True:
