@@ -11,14 +11,13 @@ class Storage:
                 f.write(str(offer) + "\n")
 
     def read_offers(self):
-        with open(self.filename, "r") as f:
+        with open(self.filename, "a+") as f:
             offers = f.readlines()
-            print("READ OFFERS:")
             for offer in offers:
                 print(offer)
 
     def read_ids(self):
-        with open(self.filename, "r") as f:
+        with open(self.filename, "a+") as f:
             csvreader = csv.reader(f, delimiter=",", quotechar="|")
             ids = []
             for offer in csvreader:
