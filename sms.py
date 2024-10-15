@@ -26,5 +26,5 @@ class SMSClient:
         msg = "\n"
 
         for i, offer in enumerate(offers):
-            msg += f"{str(i+1)}. {offer.name}, {offer.loc}, {offer.img}\n"
+            msg += f"\n{str(i+1)}. {offer.name}, {offer.loc}, {offer.href}\n"
         self.send_sms(msg)

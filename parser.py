@@ -9,10 +9,10 @@ class OlxOffer:
     name: str
     loc: str
     date: str
-    img: str
+    href: str
 
     def __str__(self):
-        return f"{self.id},{self.name},{self.date},{self.loc},{self.img}"
+        return f"{self.id},{self.name},{self.date},{self.loc},{self.href}"
 
     @classmethod
     def _retrieve_offer_name(cls, div):
@@ -29,22 +29,19 @@ class OlxOffer:
         return loc_and_date_el.text.split("-", 1)
 
     @classmethod
-    def _retrieve_offer_image(cls, div):
-        img_el = div.find(class_="css-8wsg1m")
-        if img_el is not None:
-            return img_el["src"].split(";", 1)[0]
-        img_el = div.find(class_="css-gwhqbt")
-        if img_el is not None:
-            return img_el["src"].split(";", 1)[0]
-        return None
+    def _retrieve_offer_href(cls, div):
+        href_el = div.find(class_="css-z3gu2d")
+        if href_el is None:
+            return None
+        return "https://www.olx.pl" + href_el["href"]
 
     @classmethod
     def parse(cls, offer_div):
         id = offer_div["id"]
         name = cls._retrieve_offer_name(offer_div)
         loc, date = cls._retrieve_offer_location_and_date(offer_div)
-        img = cls._retrieve_offer_image(offer_div)
-        return OlxOffer(id, name, loc, date, img)
+        href = cls._retrieve_offer_href(offer_div)
+        return OlxOffer(id, name, loc, date, href)
 
 
 class OlxPageParser:
