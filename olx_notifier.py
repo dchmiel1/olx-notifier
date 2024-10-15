@@ -54,7 +54,7 @@ def check_for_updates():
 if __name__ == "__main__":
     init_offers()
 
-    schedule.every(10).minutes.do(check_for_updates)
+    schedule.every(1).minutes.do(check_for_updates)
 
     while True:
         schedule.run_pending()
