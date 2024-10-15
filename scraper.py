@@ -2,7 +2,18 @@ from time import sleep
 from selenium import webdriver
 from selenium.webdriver import ChromeOptions
 
+from log import logger
+
 OLX_URL = "https://www.olx.pl/dom-ogrod/meble/grojec/q-oddam-za-darmo/?search%5Bdist%5D=75&search%5Border%5D=created_at%3Adesc"
+
+logger.info("Initializing web driver...")
+options = ChromeOptions()
+options.add_argument("--no-sandbox")
+options.add_argument("--headless")
+options.add_argument("window-size=1024,768")
+options.add_argument("--disable-dev-shm-usage")
+driver = webdriver.Chrome(options=options)
+logger.info("Web driver initialized")
 
 
 def scroll_page_slowly(driver):
@@ -16,12 +27,8 @@ def scroll_page_slowly(driver):
 
 
 def fetch_offers_page():
-    options = ChromeOptions()
-    options.add_argument("--no-sandbox")
-    options.add_argument("--headless")
-    options.add_argument("window-size=1024,768")
-    options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Chrome(options=options)
     driver.get(OLX_URL)
+    logger.info("Page fetched")
     scroll_page_slowly(driver)
+    logger.info("Scrolling finished")
     return driver.page_source
